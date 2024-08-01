@@ -1,3 +1,13 @@
 h1 {
-  color: #08669f;
+  color: #e85a4f;
+}
+
+.card_box {
+  background-color: #8e8d8a;
+  width: 50%;
+  color: white;
+}
+.card_box img {
+  width: 50%;
+  height: 50%;
 }/*# sourceMappingURL=style.css.map */
