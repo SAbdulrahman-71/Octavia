@@ -1,0 +1,39 @@
+// _components.scss
+
+// // Button styles using mixin
+// .button-primary {
+//     @include button($Light_Salmon);
+//   }
+  
+//   .button-secondary {
+//     @include button($Coral_Red);
+//   }
+  
+  
+//   .button-third {
+//     @include button($Sage_Gray);
+//   }
+  
+  // // Card component
+  .card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: $padding-base;
+    
+    .card-header {
+      font-size: 1.25rem;
+      margin-bottom: $margin-base;
+    }
+    
+    .card-body {
+      font-size: 1rem;
+    }
+    
+    .card-footer {
+      margin-top: $margin-base;
+      text-align: right;
+    }
+  }
+  

@@ -1,27 +1,108 @@
 @import 'partials/variables';
 @import 'partials/mixins';
-@import 'partials/base';
-@import 'partials/layout';
 @import 'partials/components';
+@import 'partials/base';
 
 
 
-    body{
+// SCSS Styles for Responsive Navbar
 
+// Container styling
+.container-fluid {
+    // Add padding or margin as needed
+    padding: 0; // Adjust as necessary
 }
 
-h1{
-    color: $fifth;
-}
+// Navbar styling
+.navbar {
+    background-color: #f8f9fa; // Light background color
+    margin-bottom: 0;
 
-.card_box{
-    background-color: $third;
-    width: 50%;
-    color: white;
+    &-brand {
+        font-size: 1.5rem; // Adjust brand font size
+        color: #333; // Brand color
+        text-decoration: none;
 
-    img{
-    
-        width: 50%;
-        height: 50%;
+        &:hover {
+            color: #555; // Color on hover
+        }
+    }
+
+    &-toggler {
+        border: none; // Remove default border
+
+        .navbar-toggler-icon {
+            background-image: url('data:image/svg+xml,...'); // Add custom icon if needed
+        }
+    }
+
+    &-collapse {
+        // Styling for the collapsible menu
+        .navbar-nav {
+            // Remove default margin and padding
+            margin: 0;
+            padding: 0;
+            list-style: none; // Remove list styling
+
+            .nav-item {
+                margin: 0;
+                padding: 0;
+
+                .nav-link {
+                    display: block; // Ensure links are block-level for easier clicking
+                    padding: 0.5rem 1rem; // Adjust padding
+                    color: #007bff; // Link color
+                    text-decoration: none;
+
+                    &:hover {
+                        color: #0056b3; // Color on hover
+                        background-color: #e9ecef; // Background color on hover
+                    }
+
+                    &.active {
+                        font-weight: bold; // Bold active link
+                        color: #0056b3; // Color of the active link
+                        background-color: #e9ecef; // Background color of the active link
+                    }
+                }
+            }
+        }
     }
 }
+
+
+  header{
+    left: 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background-color: $Pale_Beige;
+    z-index: 10000000;
+  }
+  
+  footer{
+    // margin-top: -10%;
+    color: white;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background-color: black;
+    left: 0;
+  }
+  
+
+  .main-content{
+
+
+  }
+
+  
+
+
+
+
+
+
+
+
+

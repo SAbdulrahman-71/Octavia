@@ -1,0 +1,25 @@
+// _mixins.scss
+
+// Mixin for flexbox centering
+@mixin flex-center($direction: row) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  // Mixin for a button
+  @mixin button($color: $Sage_Gray) {
+    background-color: $color;
+    color: #fff;
+    // padding: $padding-base;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    &:hover {
+      background-color: darken($color, 50%);
+    }
+  }
+  
