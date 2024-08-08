@@ -6,7 +6,20 @@
 
 
 // SCSS Styles for Responsive Navbar
+.card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
 
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.card-footer .input-group input {
+    background-color: whitesmoke
+}
 // Container styling
 .container-fluid {
     // Add padding or margin as needed
@@ -15,8 +28,9 @@
 
 // Navbar styling
 .navbar {
-    background-color: #f8f9fa; // Light background color
+    // background-color: #f8f9fa; // Light background color
     margin-bottom: 0;
+    z-index: 10000;
 
     &-brand {
         font-size: 1.5rem; // Adjust brand font size
@@ -24,7 +38,7 @@
         text-decoration: none;
 
         &:hover {
-            color: #555; // Color on hover
+            color: #c41616; // Color on hover
         }
     }
 
@@ -70,34 +84,44 @@
     }
 }
 
+.display_body{
 
+
+    background-color: $Off_White;
+}
+
+body{
+    background-color: $Off_White !important;
+}
+
+ 
+
+  .main-content{
+
+ 
+  }
+
+  
   header{
     left: 0;
     width: 100%;
     position: fixed;
     top: 0;
-    background-color: $Pale_Beige;
+    background-color: $Sage_Gray;
     z-index: 10000000;
   }
   
   footer{
     // margin-top: -10%;
-    color: white;
+    color: rgb(255, 151, 151);
     width: 100%;
     position: fixed;
     bottom: 0;
     background-color: black;
     left: 0;
+    z-index: 10000000;
   }
   
-
-  .main-content{
-
-
-  }
-
-  
-
 
 
 

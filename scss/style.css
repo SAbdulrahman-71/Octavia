@@ -17,13 +17,28 @@
   text-align: right;
 }
 
+.card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-footer .input-group input {
+  background-color: whitesmoke;
+}
+
 .container-fluid {
   padding: 0;
 }
 
 .navbar {
-  background-color: #f8f9fa;
   margin-bottom: 0;
+  z-index: 10000;
 }
 .navbar-brand {
   font-size: 1.5rem;
@@ -31,7 +46,7 @@
   text-decoration: none;
 }
 .navbar-brand:hover {
-  color: #555;
+  color: #c41616;
 }
 .navbar-toggler {
   border: none;
@@ -64,20 +79,29 @@
   background-color: #e9ecef;
 }
 
+.display_body {
+  background-color: rgba(234, 231, 220, 0.5843137255);
+}
+
+body {
+  background-color: rgba(234, 231, 220, 0.5843137255) !important;
+}
+
 header {
   left: 0;
   width: 100%;
   position: fixed;
   top: 0;
-  background-color: #d8c3a5;
+  background-color: #8e8d8a;
   z-index: 10000000;
 }
 
 footer {
-  color: white;
+  color: rgb(255, 151, 151);
   width: 100%;
   position: fixed;
   bottom: 0;
   background-color: black;
   left: 0;
+  z-index: 10000000;
 }/*# sourceMappingURL=style.css.map */
