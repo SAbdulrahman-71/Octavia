@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Redirect to login page if user is not logged in
 if (!isset($_SESSION['loggedin'])) {
-    header('Location: login.php');
+    header('Location: ../auth/login.php');
     exit;
 }
 
@@ -16,15 +16,12 @@ include('../php/header.php');
 include('../cart/cart_btn.php');
 include('../php/footer.php');
 
-
-
 function generateOrderNumber()
 {
     $timestamp = time();
     $randomNumber = rand(1000, 9999); // Generate a random number between 1000 and 9999
     return 'ORD' . $timestamp . $randomNumber; // Prefix with 'ORD' for easy identification
 }
-
 
 // Handle POST requests for cart operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -106,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Redirect back to view_cart.php if no check_out action
-    header('Location: view_cart.php');
+    header('Location: ../cart/view_cart.php');
     exit();
 }
 ?>
@@ -190,8 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
         </div>
     </div>
-
-
 
 </body>
 

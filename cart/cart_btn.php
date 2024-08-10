@@ -1,16 +1,13 @@
-<!-- cart_btn.php -->
-
-
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require('../data/fetch_inventory.php'); ?>
+require('../data/fetch_inventory.php');
+?>
 
-
-
-<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true" style="margin-top: 15%;">
-    <div class="modal-dialog modal-lg" role="document">
+<!-- Modal HTML goes here (ensuring no PHP output before this) -->
+<div class="modal fade py-5" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true" style="margin: 0">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="cartModalLabel">Cart Preview</h5>

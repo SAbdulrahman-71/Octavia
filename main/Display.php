@@ -1,45 +1,53 @@
 <?php
-// session_start();
-require('../php/header.php');
-require('../cart/cart_btn.php');
+session_start();
 
-
-
+// Check if user is logged in; if not, redirect to login
 if (!isset($_SESSION['loggedin'])) {
     header('Location: ../auth/login.php');
     exit;
 }
 
+// Initialize cart if not already
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Handle adding product to the cart
+if (isset($_GET['product'])) {
+    $product_id = intval($_GET['product']);
+    $quantity = isset($_GET['quantity']) ? intval($_GET['quantity']) : 1;
+
+    // Add or update the item in the cart
+    $_SESSION['cart'][$product_id] = isset($_SESSION['cart'][$product_id])
+        ? $_SESSION['cart'][$product_id] + $quantity
+        : $quantity;
+
+    // Redirect to the same page with a fragment identifier to scroll to the product
+    $redirectUrl = '../main/Display.php';
+    if (isset($_GET['scroll_to'])) {
+        $redirectUrl .= '?scroll_to=' . intval($_GET['scroll_to']);
+    }
+    header('Location: ' . $redirectUrl);
+    exit();
+}
+
+// Capture category for session storage
+if (isset($_GET['category'])) {
+    $_SESSION['category'] = $_GET['category'];
+}
+
+$selectedCategory = isset($_SESSION['category']) ? $_SESSION['category'] : 'All';
+
+// Capture search query and sorting
+$searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
+$sortBy = isset($_GET['sort']) ? $_GET['sort'] : '';
+
+// Include necessary files
 require('../data/fetch_inventory.php');
-
-$get_prid = isset($_GET['product']) ? $_GET['product'] : null;
-$info = null;
-if ($get_prid !== null) {
-    foreach ($inventory as $category => $products) {
-        foreach ($products as $product) {
-            if ($get_prid == $product['id']) {
-                $info = $product;
-                break 2;
-            }
-        }
-    }
-}
-
-if ($get_prid !== null && $info === null) {
-    header('Location: ../main/index.php?error=No data for this product');
-    exit;
-}
-
-if (isset($_GET['add_to_cart']) && isset($_GET['product'])) {
-    $get_cart_product_id = $_GET['product'];
-    $quantity = isset($_GET['quantity']) ? (int)$_GET['quantity'] : 1;
-
-    if (!isset($_SESSION['cart'][$get_cart_product_id])) {
-        $_SESSION['cart'][$get_cart_product_id] = $quantity;
-    } else {
-        $_SESSION['cart'][$get_cart_product_id] += $quantity;
-    }
-}
+require('../php/header.php');
+require('../cart/cart_btn.php');
+require('../php/footer.php');
+require('../php/search_sort.php');
 ?>
 
 <!DOCTYPE html>
@@ -49,75 +57,36 @@ if (isset($_GET['add_to_cart']) && isset($_GET['product'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main</title>
-    <!-- Link to the compiled CSS file -->
-    <link rel="stylesheet" href="/scss/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/scss/style.css">
 </head>
 
 <body>
-
     <div class="my-5" style="padding: 5%;">
-
-        <?php
-        // Set the chosen category to the session variable
-        if (isset($_GET['category'])) {
-            $_SESSION['category'] = $_GET['category'];
-        }
-
-        // Retrieve the selected category from the session
-        $selectedCategory = isset($_SESSION['category']) ? $_SESSION['category'] : null;
-
-        // Function to display products for the selected category
-        function displayCategoryProducts($inventory, $selectedCategory)
-        {
-            if ($selectedCategory && isset($inventory[$selectedCategory])) {
-                $products = $inventory[$selectedCategory];
-                echo '<div class="container-fluid mb-1 mt-1">';
-                echo '<div class="row">';
-                foreach ($products as $product) {
-                    echo '<div class="col-md-3 mb-4">';
-                    echo '<div class="card h-100 shadow-sm bg-light">';
-                    echo '<div class="card-header text-center">';
-                    echo '<img src="' . htmlspecialchars($product['img']) . '" alt="' . htmlspecialchars($product['name']) . '" class="img-fluid">';
-                    echo '</div>';
-                    echo '<div class="card-body text-center">';
-                    echo '<h5 class="card-title font-weight-bold">' . htmlspecialchars($product['name']) . '</h5>';
-                    echo '<p class="card-text"><strong>Price:</strong> ' . number_format($product['price'], 2) . ' AED</p>';
-                    echo '<p class="card-text"><strong>Occasion:</strong> ' . htmlspecialchars($product['occasion']) . '</p>';
-                    echo '</div>';
-                    echo '<div class="card-footer">';
-                    echo '<form action="../main/index.php" method="get" class="mt-auto">';
-                    echo '<input type="hidden" name="product" value="' . htmlspecialchars($product['id']) . '">';
-                    echo '<div class="input-group">';
-                    echo '<input type="number" class="form-control" name="quantity" value="1" min="1">';
-                    echo '<div class="input-group-append">';
-                    echo '<button type="submit" class="btn btn-primary" name="add_to_cart" value="1">Add to Cart</button>';
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</form>';
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</div>';
-                }
-                echo '</div>';
-                echo '</div>';
-            } else {
-                echo '<p>No products found for the selected category.</p>';
-            }
-        }
-
-
-
-
-
-
-        // Display the products for the selected category
-        // displayCategoryProducts($inventory, $selectedCategory);
-        ?>
+        <form method="get" action="../main/Display.php" class="mb-4">
+            <input type="hidden" name="category" value="<?php echo htmlspecialchars($selectedCategory); ?>">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search products..." value="<?php echo htmlspecialchars($searchQuery); ?>">
+                <select name="sort" class="form-control ml-2">
+                    <option value="">Sort by</option>
+                    <option value="name" <?php if ($sortBy == 'name') echo 'selected'; ?>>Name</option>
+                    <option value="price_asc" <?php if ($sortBy == 'price_asc') echo 'selected'; ?>>Price: Low to High</option>
+                    <option value="price_desc" <?php if ($sortBy == 'price_desc') echo 'selected'; ?>>Price: High to Low</option>
+                </select>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
 
         <div class="p-5">
             <div class="container-fluid mb-1 mt-1">
                 <div class="row">
+                    <div class="card py-2 mb-4 col-md mx-2">
+                        <a href="../main/Display.php?category=All" class="text-decoration-none">
+                            <h2 class="card-header">All</h2>
+                        </a>
+                    </div>
                     <?php foreach ($inventory as $categoryName => $products) : ?>
                         <div class="card py-2 mb-4 col-md mx-2">
                             <a href="../main/Display.php?category=<?php echo urlencode($categoryName); ?>" class="text-decoration-none">
@@ -130,13 +99,24 @@ if (isset($_GET['add_to_cart']) && isset($_GET['product'])) {
         </div>
 
 
-        <?php displayCategoryProducts($inventory, $selectedCategory); ?>
+        <div id="products">
+            <?php displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $sortBy); ?>
+        </div>
+    </div>
 
-
-
-
-
+    <script>
+        // Check if there's a scroll_to parameter in the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const scrollToId = urlParams.get('scroll_to');
+        if (scrollToId) {
+            const element = document.getElementById(`product-${scrollToId}`);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+    </script>
 </body>
 
-
-</html><?php require('../php/footer.php'); ?>
+</html>

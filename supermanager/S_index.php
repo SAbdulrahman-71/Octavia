@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include '../php/db.php';  // Ensure this is the correct path
+include '../php/db.php';
 include('../php/header.php');
 include('../cart/cart_btn.php');
 include('../php/footer.php');
@@ -63,6 +63,7 @@ if (!$inventory) {
 </head>
 
 <body class="container py-5" style="margin-bottom: 10%;">
+
 
 
     <div class="container mt-5">
