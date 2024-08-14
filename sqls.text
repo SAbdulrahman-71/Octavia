@@ -70,6 +70,20 @@ CREATE TABLE `inventory` (
   `description` text NOT NULL,
   PRIMARY KEY (`id`)
 );
+              
+
+CREATE TABLE `inventory_promotion` (
+  `inventory_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `occasion` varchar(255) NOT NULL,
+  `category` varchar(255) NOT NULL,
+  `promotion_type` varchar(255) DEFAULT NULL,  -- e.g., "discount", "buy one get one"
+  `is_new_arrival` boolean DEFAULT FALSE,
+  `is_featured` boolean DEFAULT FALSE,
+  PRIMARY KEY (`inventory_id`),
+  FOREIGN KEY (`inventory_id`) REFERENCES `inventory`(`id`) ON DELETE CASCADE
+);
+
 
 
 CREATE TABLE orders (

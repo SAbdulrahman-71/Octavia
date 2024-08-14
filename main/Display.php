@@ -23,7 +23,7 @@ if (isset($_GET['product'])) {
         : $quantity;
 
     // Redirect to the same page with a fragment identifier to scroll to the product
-    $redirectUrl = '../main/Display.php';
+    $redirectUrl = 'display.php';
     if (isset($_GET['scroll_to'])) {
         $redirectUrl .= '?scroll_to=' . intval($_GET['scroll_to']);
     }
@@ -41,6 +41,7 @@ $selectedCategory = isset($_SESSION['category']) ? $_SESSION['category'] : 'All'
 // Capture search query and sorting
 $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $sortBy = isset($_GET['sort']) ? $_GET['sort'] : '';
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
 // Include necessary files
 require('../data/fetch_inventory.php');
@@ -56,56 +57,73 @@ require('../php/search_sort.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main</title>
+    <title>Product Display</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/scss/style.css">
+    <style>
+
+    </style>
 </head>
 
-<body>
-    <div class="my-5" style="padding: 5%;">
-        <form method="get" action="../main/Display.php" class="mb-4">
+<body class="display_body">
+    <?php include('../php/header.php'); ?>
+
+    <div class="container my-5">
+        <!-- Search and Filter Form -->
+        <form method="get" action="display.php" class="mb-4">
             <input type="hidden" name="category" value="<?php echo htmlspecialchars($selectedCategory); ?>">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Search products..." value="<?php echo htmlspecialchars($searchQuery); ?>">
                 <select name="sort" class="form-control ml-2">
                     <option value="">Sort by</option>
-                    <option value="name" <?php if ($sortBy == 'name') echo 'selected'; ?>>Name</option>
-                    <option value="price_asc" <?php if ($sortBy == 'price_asc') echo 'selected'; ?>>Price: Low to High</option>
-                    <option value="price_desc" <?php if ($sortBy == 'price_desc') echo 'selected'; ?>>Price: High to Low</option>
+                    <option value="name" <?php echo $sortBy === 'name' ? 'selected' : ''; ?>>Name</option>
+                    <option value="price_asc" <?php echo $sortBy === 'price_asc' ? 'selected' : ''; ?>>Price: Low to High</option>
+                    <option value="price_desc" <?php echo $sortBy === 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
                 </select>
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit">Search</button>
                 </div>
             </div>
         </form>
 
-        <div class="p-5">
-            <div class="container-fluid mb-1 mt-1">
-                <div class="row">
-                    <div class="card py-2 mb-4 col-md mx-2">
-                        <a href="../main/Display.php?category=All" class="text-decoration-none">
-                            <h2 class="card-header">All</h2>
-                        </a>
-                    </div>
-                    <?php foreach ($inventory as $categoryName => $products) : ?>
-                        <div class="card py-2 mb-4 col-md mx-2">
-                            <a href="../main/Display.php?category=<?php echo urlencode($categoryName); ?>" class="text-decoration-none">
-                                <h2 class="card-header"><?php echo htmlspecialchars($categoryName); ?></h2>
-                            </a>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
+        <!-- Category Buttons -->
+        <div class="category-btn mb-4">
+            <a href="display.php?category=All">All</a>
+            <?php foreach ($inventory as $categoryName => $products) : ?>
+                <a href="display.php?category=<?php echo urlencode($categoryName); ?>" class=""><?php echo htmlspecialchars($categoryName); ?></a>
+            <?php endforeach; ?>
         </div>
 
-
-        <div id="products">
-            <?php displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $sortBy); ?>
+        <!-- Product Display -->
+        <div id="products" class="row">
+            <?php displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $sortBy, $page); ?>
         </div>
+
+        <!-- Pagination -->
+        <?php
+        // Assuming you have total items count
+        $totalItems = getTotalItemsCount($selectedCategory, $searchQuery);
+        $limit = 20; // Number of items per page
+        $totalPages = ceil($totalItems / $limit);
+
+        if ($totalPages > 1) {
+            echo '<nav aria-label="Page navigation">';
+            echo '<ul class="pagination justify-content-center">';
+            for ($i = 1; $i <= $totalPages; $i++) {
+                $active = $i == $page ? 'active' : '';
+                echo "<li class='page-item $active'><a class='page-link' href='display.php?page=$i&search=" . urlencode($searchQuery) . "&sort=" . urlencode($sortBy) . "&category=" . urlencode($selectedCategory) . "'>$i</a></li>";
+            }
+            echo '</ul>';
+            echo '</nav>';
+        }
+        ?>
+
     </div>
 
+    <?php include('../php/footer.php'); ?>
+
     <script>
-        // Check if there's a scroll_to parameter in the URL
+        // Smooth scroll to product
         const urlParams = new URLSearchParams(window.location.search);
         const scrollToId = urlParams.get('scroll_to');
         if (scrollToId) {

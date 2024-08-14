@@ -38,7 +38,9 @@ if (!function_exists('isActive')) {
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Artisté</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon">
+                    <i class="fa-solid fa-bars"></i>
+                </span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
@@ -47,17 +49,17 @@ if (!function_exists('isActive')) {
                         switch ($_SESSION['role']) {
                             case 'super_manager':
                                 echo '<li class="nav-item ' . isActive('../supermanager/S_index.php') . '">
-                                        <a class="nav-link bg-primary" href="../supermanager/S_index.php">super_manager <span class="sr-only">(current)</span></a>
+                                        <a class="nav-link" href="../supermanager/S_index.php">super_manager <span class="sr-only">(current)</span></a>
                                       </li>';
                                 break;
                             case 'manager':
                                 echo '<li class="nav-item ' . isActive('../manager/M_index.php') . '">
-                                        <a class="nav-link bg-success" href="../manager/M_index.php">manager <span class="sr-only">(current)</span></a>
+                                        <a class="nav-link" href="../manager/M_index.php">manager <span class="sr-only">(current)</span></a>
                                       </li>';
                                 break;
                             case 'admin':
                                 echo '<li class="nav-item ' . isActive('../admin/A_index.php') . '">
-                                        <a class="nav-link bg-warning" href="../admin/A_index.php">admin <span class="sr-only">(current)</span></a>
+                                        <a class="nav-link" href="../admin/A_index.php">admin <span class="sr-only">(current)</span></a>
                                       </li>';
                                 break;
                             default:
@@ -65,8 +67,8 @@ if (!function_exists('isActive')) {
                         }
                     }
                     ?>
-                    <li class="nav-item <?php echo isActive('index.php'); ?>">
-                        <a class="nav-link" href="../main/index.php">Home</a>
+                    <li class="nav-item <?php echo isActive('home.php'); ?>">
+                        <a class="nav-link" href="../main/home.php">Home</a>
                     </li>
                     <li class="nav-item <?php echo isActive('about.php'); ?>">
                         <a class="nav-link" href="../main/about.php">About</a>

@@ -35,13 +35,20 @@ $_SESSION['number_of_items'] = $numberOfItems;
         <h1 class="mb-4">Add Multiple Inventory Items</h1>
 
         <!-- Form to specify the number of items -->
-        <form action="add_multiple_inventory.php" method="post" class="mb-4">
-            <div class="form-group">
-                <label for="number_of_items">Number of Items to Add</label>
-                <input type="number" class="form-control" id="number_of_items" name="number_of_items" min="1" required>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form action="add_multiple_inventory.php" method="post" class="mb-4">
+                        <div class="form-group">
+                            <label for="number_of_items">Number of Items to Add</label>
+                            <input type="number" class="form-control" id="number_of_items" name="number_of_items" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Set Number of Items</button>
+                    </form>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Set Number of Items</button>
-        </form>
+        </div>
+
 
         <?php if (isset($_SESSION['number_of_items'])) : ?>
             <!-- Form to add multiple items -->
@@ -85,6 +92,9 @@ $_SESSION['number_of_items'] = $numberOfItems;
                 <button type="submit" class="btn btn-success">Submit All Items</button>
             </form>
         <?php endif; ?>
+
+
+
 
         <a href="index.php" class="btn btn-secondary mt-3">Back to Inventory</a>
     </div>

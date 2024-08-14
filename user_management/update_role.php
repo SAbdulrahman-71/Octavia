@@ -1,6 +1,5 @@
 <?php
-// Include database connection
-include '../php/db.php'; // Assuming your connection script is named db_connect.php
+include '../php/db.php';
 
 // Get user ID and new role from POST request
 $user_id = intval($_POST['user_id']);

@@ -23,7 +23,7 @@ if (isset($_POST['ok'])) {
         }
 
         $_SESSION['loggedin'] = true;
-        $_SESSION['user_id'] = $record['id']; // Set the user ID correctly here
+        $_SESSION['user_id'] = $record['id'];
         $_SESSION['name'] = $record['username'];
         $_SESSION['email'] = $record['email'];
         $_SESSION['role'] = $record['role'];
@@ -68,11 +68,11 @@ if (isset($_POST['ok'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="../scss/style.css">
 </head>
 
-<body>
-    <div class="container pt-5">
+<body class="login_container">
+    <div class="container-flex ">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <?php if ($error) : ?>
@@ -92,7 +92,7 @@ if (isset($_POST['ok'])) {
                                 <label for="pass">Password</label>
                                 <input type="password" class="form-control" name="pass" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block" name="ok">Login</button>
+                            <button type="submit" class="btn button_Coral flex-center btn-block" name="ok">Login</button>
                             <a href="register.php" class="btn btn-link">Register</a>
                         </form>
                     </div>

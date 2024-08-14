@@ -48,6 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Redirect with messages
     $message = implode('<br>', $messages);
-    header("Location: index.php?message=" . urlencode($message));
+
+
+    switch ($_SESSION['role']) {
+        case 'super_manager':
+            $redirect_url = '../supermanager/S_index.php';
+            break;
+        case 'manger':
+            $redirect_url = '../manager/M_index.php';
+            break;
+        default:
+            $redirect_url = '../auth/login.php';
+    }
+
+    header("Location:" . $redirect_url . "?message=" . urlencode($message));
     exit;
 }

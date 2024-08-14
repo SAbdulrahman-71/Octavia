@@ -1,93 +1,94 @@
 <?php
-session_start();
-require('../php/header.php');
-require('../cart/cart_btn.php');
-
-
-if (!isset($_SESSION['loggedin'])) {
-    header('Location: ../auth/login.php');
-    exit;
-}
-
-require('../data/fetch_inventory.php');
-
-$get_prid = isset($_GET['product']) ? $_GET['product'] : null;
-$info = null;
-if ($get_prid !== null) {
-    foreach ($inventory as $category => $products) {
-        foreach ($products as $product) {
-            if ($get_prid == $product['id']) {
-                $info = $product;
-                break 2;
-            }
-        }
-    }
-}
-
-if ($get_prid !== null && $info === null) {
-    header('Location: ../main/index.php?error=No data for this product');
-    exit;
-}
-
-if (isset($_GET['add_to_cart']) && isset($_GET['product'])) {
-    $get_cart_product_id = $_GET['product'];
-    $quantity = isset($_GET['quantity']) ? (int)$_GET['quantity'] : 1;
-
-    if (!isset($_SESSION['cart'][$get_cart_product_id])) {
-        $_SESSION['cart'][$get_cart_product_id] = $quantity;
-    } else {
-        $_SESSION['cart'][$get_cart_product_id] += $quantity;
-    }
-}
+include('../auth/auth.php');
+// include('../auth/verify.php');
 ?>
-
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main</title>
-    <!-- Link to the compiled CSS file -->
-    <link rel="stylesheet" href="/scss/style.css">
+    <title>Login OR Register</title>
+
+    <link rel="stylesheet" href="../scss/style.css">
+    <script src="https://kit.fontawesome.com/5b71452b8d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 </head>
 
-<body>
-    <style>
-        /* Custom styles for the product cards */
-        .card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
+<body class="new-login-container">
 
-        .card-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-        }
 
-        .card-footer .input-group input {
-            background-color: whitesmoke
-        }
-    </style>
+    <div class="pill-1"></div>
+    <div class="pill-2"></div>
+    <div class="pill-3"></div>
+    <div class="pill-4"></div>
+    <div class="flower_box1"></div>
 
-    <div class="my-5 p-5">
-        <div class="container mb-1 mt-1" style="margin-left: 25%;">
-            <div class="row">
-                <?php foreach ($inventory as $categoryName => $products) : ?>
-                    <div class="card py-2 mb-4 col-md-4 mx-2">
-                        <a href="../main/Display.php?category=<?php echo urlencode($categoryName); ?>" class="text-decoration-none">
-                            <h2 class="card-header"><?php echo htmlspecialchars($categoryName); ?></h2>
-                        </a>
-                    </div>
-                <?php endforeach; ?>
+    <!-- Display the message only if it's not empty -->
+    <?php if (!empty($message)) : ?>
+        <div class="alert <?php echo strpos($message, 'Error') === false ? 'alert-danger' : 'alert-success'; ?>">
+            <?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="container" id=container>
+        <div class="form-container sign-up">
+            <form action="index.php" method="post">
+                <h1>Creat Account</h1>
+                <div class="social-icons">
+                    <a href="" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="" class="icon"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="" class="icon"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+
+                <input type="text" placeholder="Name" class="form-control" name="username" id="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
+                <input type="email" placeholder="Email" class="form-control" name="email" id="email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
+                <input type="password" placeholder="Password" class="form-control" name="password" id="password" required>
+                <input type="password" placeholder="Confirm Password" class="form-control" name="password_2" id="password_2" required>
+                <button type="submit" name="action" value="register">Sign Up</button>
+            </form>
+        </div>
+
+        <div class="form-container Log-in">
+            <form action="index.php" method="post">
+                <h1>Log In</h1>
+                <div class="social-icons">
+                    <a href="" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="" class="icon"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="" class="icon"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+                <span>or use your email & password for Log in</span>
+                <input type="email" placeholder="Email" class="form-control" name="email" required>
+                <input type="password" placeholder="Password" class="form-control" name="password" required>
+                <button type="submit" name="action" value="login">Login</button>
+                <a href="index.php">Forgot Password</a>
+
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-pannel toggle-left">
+                    <h1>Hello!</h1>
+                    <p>Choose the method to creact your Account</p>
+                    <p>OR</p>
+                    <button class="hidden" id="login">Log-In</button>
+                </div>
+
+                <div class="toggle-pannel toggle-right">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter Your Email & Password</p>
+                    <p>OR</p>
+                    <button class="hidden" id="register">Sign-Up</button>
+                </div>
             </div>
         </div>
     </div>
-
-
-    <?php require('../php/footer.php'); ?>
+    <script src="../js/sign_toggles.js"></script>
 </body>
 
 </html>

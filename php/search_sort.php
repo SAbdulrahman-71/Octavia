@@ -1,5 +1,5 @@
 <?php
-// search_sort.php
+
 /**
  * Displays products based on category, search query, and sorting option.
  *
@@ -7,10 +7,14 @@
  * @param string $selectedCategory Selected category for filtering products.
  * @param string $searchQuery     Search query for filtering products by name.
  * @param string $sortBy          Sorting option (e.g., 'name', 'price_asc', 'price_desc').
+ * @param int    $page            Current page number for pagination.
  */
-function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $sortBy)
+function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $sortBy, $page)
 {
-    // If "All" is selected, combine all products from all categories
+    $limit = 20; // Number of items per page
+    $offset = ($page - 1) * $limit;
+
+    // If "All" is selected,
     if ($selectedCategory === 'All') {
         $products = [];
         foreach ($inventory as $categoryProducts) {
@@ -25,7 +29,7 @@ function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $s
     // Filter products by search query
     if ($searchQuery) {
         $products = array_filter($products, function ($product) use ($searchQuery) {
-            return stripos($product['name'], $searchQuery) !== false;
+            return stripos($product['occasion'], $searchQuery) !== false || stripos($product['name'], $searchQuery) !== false;
         });
     }
 
@@ -45,7 +49,8 @@ function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $s
         });
     }
 
-
+    // Paginate products
+    $products = array_slice($products, $offset, $limit);
 
     if (!empty($products)) {
         echo '<div class="container-fluid mb-1 mt-1">';
@@ -59,15 +64,13 @@ function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $s
             $occasion = htmlspecialchars($product['occasion']);
             $category = htmlspecialchars($selectedCategory);
 
-            // Output HTML with PHP variables directly
+            // Output product card
             echo <<<HTML
-            <div id="product-$id" class="col-md-3 mb-4">
-                <div class="card h-100 shadow-sm bg-light">
-                    <div class="card-header text-center">
-                        <img src="$img" alt="$name" class="img-fluid">
-                    </div>
+            <div id="product-$id" class="col-md-4 col-lg-3 mb-4">
+                <div class="card product-card h-100">
+                    <img src="$img" alt="$name" class="card-img-top img-fluid" loading="lazy">
                     <div class="card-body text-center">
-                        <h5 class="card-title font-weight-bold">$name</h5>
+                        <h5 class="card-title">$name</h5>
                         <p class="card-text"><strong>Price:</strong> $price AED</p>
                         <p class="card-text"><strong>Occasion:</strong> $occasion</p>
                     </div>
@@ -79,7 +82,7 @@ function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $s
                             <div class="input-group">
                                 <input type="number" class="form-control" name="quantity" value="1" min="1">
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-primary" name="add_to_cart" value="1">Add to Cart</button>
+                                    <button type="submit" class="btn " name="add_to_cart" value="1">Add to Cart</button>
                                 </div>
                             </div>
                         </form>
@@ -92,6 +95,38 @@ function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $s
         echo '</div>';
         echo '</div>';
     } else {
-        echo '<p>No products found.</p>';
+        echo '<div class="alert alert-warning">No products found.</div>';
     }
+}
+
+/**
+ * Get total items count for pagination.
+ *
+ * @param string $selectedCategory Selected category for filtering products.
+ * @param string $searchQuery     Search query for filtering products by name.
+ * @return int Total items count.
+ */
+function getTotalItemsCount($selectedCategory, $searchQuery)
+{
+    global $inventory;
+
+    if ($selectedCategory === 'All') {
+        $products = [];
+        foreach ($inventory as $categoryProducts) {
+            $products = array_merge($products, $categoryProducts);
+        }
+    } else if ($selectedCategory && isset($inventory[$selectedCategory])) {
+        $products = $inventory[$selectedCategory];
+    } else {
+        $products = [];
+    }
+
+    // Filter products by search query
+    if ($searchQuery) {
+        $products = array_filter($products, function ($product) use ($searchQuery) {
+            return stripos($product['occasion'], $searchQuery) !== false || stripos($product['name'], $searchQuery) !== false;
+        });
+    }
+
+    return count($products);
 }

@@ -5,6 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require('../data/fetch_inventory.php');
 ?>
 
+<link rel="stylesheet" href="../scss/style.css">
 <!-- Modal HTML goes here (ensuring no PHP output before this) -->
 <div class="modal fade py-5" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true" style="margin: 0">
     <div class="modal-dialog modal-xl" role="document">
@@ -59,8 +60,8 @@ require('../data/fetch_inventory.php');
                 <?php endif; ?>
             </div>
             <div class="modal-footer">
-                <a href="/cart/view_cart.php" class="btn btn-primary">Full View</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="/cart/view_cart.php">Full View</a>
+                <button type="button" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

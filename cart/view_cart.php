@@ -1,4 +1,6 @@
 <?php
+ob_start(); // Start output buffering
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -13,7 +15,7 @@ if (!isset($_SESSION['loggedin'])) {
 require('../data/fetch_inventory.php');
 include '../php/db.php';
 include('../php/header.php');
-include('../cart/cart_btn.php');
+include('../cart/cart_btn.php'); // Ensure this file does not produce output
 include('../php/footer.php');
 
 function generateOrderNumber()
@@ -26,9 +28,8 @@ function generateOrderNumber()
 // Handle POST requests for cart operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_cart'])) {
-        // Update cart quantity
-        $itemId = $_POST['item_id'];
-        $quantity = (int)$_POST['quantity'];
+        $itemId = filter_var($_POST['item_id'], FILTER_SANITIZE_NUMBER_INT);
+        $quantity = filter_var($_POST['quantity'], FILTER_SANITIZE_NUMBER_INT);
 
         if ($quantity > 0) {
             $_SESSION['cart'][$itemId] = $quantity;
@@ -38,8 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['remove_from_cart'])) {
-        // Remove item from cart
-        $itemId = $_POST['item_id'];
+        $itemId = filter_var($_POST['item_id'], FILTER_SANITIZE_NUMBER_INT);
         unset($_SESSION['cart'][$itemId]);
     }
 
@@ -49,10 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $user_id = $_SESSION['user_id'];
-        $order_number = generateOrderNumber(); // Generate a unique order number
+        $order_number = generateOrderNumber();
         $total_amount = 0;
 
-        // Calculate the total amount
         foreach ($_SESSION['cart'] as $product_id => $quantity) {
             foreach ($inventory as $category => $products) {
                 foreach ($products as $product) {
@@ -63,16 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Start a database transaction
         $connect->begin_transaction();
 
         try {
-            // Insert into orders table
             $insert_order = $connect->prepare("INSERT INTO orders (user_id, order_number, total_amount, status) VALUES (?, ?, ?, 'placed')");
             $insert_order->bind_param('ssd', $user_id, $order_number, $total_amount);
             $insert_order->execute();
 
-            // Insert into order_items table
             $insert_order_item = $connect->prepare("INSERT INTO order_items (order_number, item_id, item_qty, item_price_current) VALUES (?, ?, ?, ?)");
             foreach ($_SESSION['cart'] as $product_id => $quantity) {
                 foreach ($inventory as $category => $products) {
@@ -86,26 +82,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Commit the transaction
             $connect->commit();
-
-            // Clear the cart
             unset($_SESSION['cart']);
-
-            // Redirect to order confirmation page
-            header('Location: view_cart.php');
+            header('Location: ../cart/view_cart.php');
             exit();
         } catch (Exception $e) {
-            // Rollback the transaction on error
             $connect->rollback();
-            echo "Failed to process the order: " . $e->getMessage();
+            error_log("Failed to process the order: " . $e->getMessage());
+            echo "Failed to process the order.";
         }
     }
 
     // Redirect back to view_cart.php if no check_out action
-    header('Location: ../cart/view_cart.php');
-    exit();
+    if (!isset($_POST['check_out'])) {
+        header('Location: ../cart/view_cart.php');
+        exit();
+    }
 }
+
+ob_end_flush(); // End output buffering and flush output
 ?>
 
 <!DOCTYPE html>
@@ -120,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="container">
-
     <!-- Main content -->
     <div style="margin-top: 10%; margin-bottom:10%">
         <div class="container">
@@ -187,7 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
         </div>
     </div>
-
 </body>
 
 </html>

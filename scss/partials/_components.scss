@@ -5,15 +5,18 @@
 //     @include button($Light_Salmon);
 //   }
   
-//   .button-secondary {
-//     @include button($Coral_Red);
-//   }
+  .button_Coral {
+    @include button($Coral_Red);
+  }
   
   
 //   .button-third {
 //     @include button($Sage_Gray);
 //   }
   
+
+
+
   // // Card component
   .card {
     background: #fff;

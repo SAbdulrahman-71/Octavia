@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-// Include database connection file
-require('../php/db.php'); // Ensure this path is correct
+require('../php/db.php');
 
 // Check if the user is logged in
 if (isset($_SESSION['email'])) {
@@ -15,10 +14,10 @@ if (isset($_SESSION['email'])) {
     $logout_query = "UPDATE users SET is_loggedin = 0 WHERE email = '$email'";
 
     if (mysqli_query($connect, $logout_query)) {
-        // Optionally, you could set a session variable to show a success message
+
         $_SESSION['logout_message'] = 'User logged out successfully.';
     } else {
-        // Log the error for debugging purposes
+
         error_log('Error updating status: ' . mysqli_error($connect));
         $_SESSION['logout_message'] = 'Error updating status. Please try again.';
     }
@@ -32,6 +31,6 @@ $_SESSION = array();
 // Destroy the session
 session_destroy();
 
-// Redirect to the login page or home page
-header('Location: ../auth/login.php'); // Ensure this path is correct
+// Redirect to the login page
+header('Location: ../main/index.php');
 exit;
