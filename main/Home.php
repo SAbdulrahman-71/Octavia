@@ -1,7 +1,7 @@
 <?php
 require('../php/header.php');
 require('../cart/cart_btn.php');
-require('../php/footer.php');
+
 
 if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
@@ -39,8 +39,6 @@ if (isset($_GET['add_to_cart']) && isset($_GET['product'])) {
         $_SESSION['cart'][$get_cart_product_id] += $quantity;
     }
 }
-
-// Connect to the database (assumes $connect is your connection object)
 
 // Query to get featured products
 $F_query = "
@@ -102,10 +100,13 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 <body class="home" style="background-color: #e2e2e2;">
 
     <div class="hero">
+
         <div class="welcome">
             <h1>Welcome to Artisté</h1>
             <p>Your destination for exquisite flowers, perfumes, gifts, chocolates, and watches.</p>
-            <a href="display.php?category=All" class="btn btn-light btn-lg">Shop Now</a>
+            <button>
+                <a href="display.php?category=All" class="btn btn-lg">Shop Now</a>
+            </button>
         </div>
     </div>
 
@@ -129,13 +130,14 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
         </div>
     </div>
 
-    <div class="container my-5">
-        <h2>Explore Our Wide Range of Products!</h2>
+    <div class="explore-container">
+        <div class="product-heading-container">
+            <h2 class="product-heading">Explore Our Wide Range of Products!</h2>
+        </div>
         <div class="category-btn mb-4">
             <div class="row">
-
                 <?php foreach ($inventory as $categoryName => $products) : ?>
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-4 mb-4">
                         <div class="promotion-card">
                             <div class="card">
                                 <div class="promotion-info text-center py-3">
@@ -150,16 +152,17 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
         </div>
     </div>
 
-    <div class="container my-5">
+    <div class="promotion-container my-5">
         <h2>On Promotion</h2>
         <div class="row">
             <?php foreach ($Promo_Products as $product): ?>
-                <div class="col-md-3 mb-4">
+                <div class="col-md-2 mb-4">
                     <div class="card product-card h-100">
+
                         <img src="<?php echo htmlspecialchars($product['img']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="card-img-top img-fluid" loading="lazy">
                         <div class="card-body text-center">
                             <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
-                            <p class="card-text"><?php echo htmlspecialchars($product['description']); ?></p>
+
                         </div>
                         <div class="card-footer text-center">
                             <a href="display.php?product=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-primary">View Details</a>
@@ -178,6 +181,8 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
         <?php endforeach; ?>
     </div>
 
+
+    <?php require('../php/footer.php'); ?>
 </body>
 
 </html>

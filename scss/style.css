@@ -487,6 +487,55 @@ body {
   background-color: rgba(0, 0, 0, 0.1764705882);
   width: 100%;
 }
+.home .explore-container {
+  padding: 5% 10%;
+  width: 100%;
+  /* Container for the heading */
+  /* Heading Styles */
+  /* Decorative Elements */
+  /* Animation for Hover Effect */
+}
+.home .explore-container .product-heading-container {
+  text-align: center;
+  margin: 50px 0;
+  position: relative;
+}
+.home .explore-container .product-heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333; /* Dark color for better contrast */
+  background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient background */
+  -webkit-background-clip: text; /* Clips the background to the text */
+  -webkit-text-fill-color: transparent; /* Makes the text color transparent to show the gradient */
+  display: inline-block;
+  padding: 10px;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow effect */
+  position: relative;
+}
+.home .explore-container .product-heading::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 5px;
+  background: #ff7e5f;
+  border-radius: 5px;
+}
+.home .explore-container .product-heading:hover {
+  background: linear-gradient(to right, #911010, #feb47b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transform: scale(1.05); /* Slightly enlarge the text */
+  transition: transform 0.3s ease-in-out;
+}
+.home .promotion-container {
+  padding: 5%;
+  background-color: rgba(0, 0, 0, 0.1764705882);
+  width: 100%;
+}
 
 header {
   left: 0;
@@ -505,6 +554,21 @@ footer {
   background-color: black;
   left: 0;
   z-index: 10000000;
+}
+
+.product-popup {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.873);
+  border: 1px solid rgba(0, 0, 0, 0.5960784314);
+  padding: 10px;
+  width: 250x;
+  height: 180px;
+  display: none;
+  z-index: 1000; /* Ensure popup appears above other content */
+}
+
+.details-card:hover .product-popup {
+  display: block;
 }
 
 .S-index-container * {
@@ -529,4 +593,8 @@ footer {
 }
 .S-index-container .btn-container {
   margin-bottom: 20px;
+}
+
+.profile-container {
+  padding-top: 5%;
 }/*# sourceMappingURL=style.css.map */

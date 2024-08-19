@@ -606,6 +606,71 @@ body{
         // flex-direction: column;
     }
 
+    .explore-container{
+        padding: 5% 10%;
+        width: 100%;
+       
+
+        /* Container for the heading */
+    .product-heading-container {
+        text-align: center;
+        margin: 50px 0;
+        position: relative;
+}
+
+/* Heading Styles */
+    .product-heading {
+        font-size: 2.5rem; 
+        font-weight: 700; 
+        color: #333; /* Dark color for better contrast */
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient background */
+        -webkit-background-clip: text; /* Clips the background to the text */
+    -webkit-text-fill-color: transparent; /* Makes the text color transparent to show the gradient */
+    display: inline-block;
+    padding: 10px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow effect */
+    position: relative;
+}
+
+/* Decorative Elements */
+    .product-heading::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px; 
+    transform: translateX(-50%);
+    width: 50px;
+    height: 5px; 
+    background: #ff7e5f; 
+    border-radius: 5px; 
+}
+
+/* Animation for Hover Effect */
+    .product-heading:hover {
+    background: linear-gradient(to right, #911010, #feb47b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transform: scale(1.05); /* Slightly enlarge the text */
+    transition: transform 0.3s ease-in-out;
+}
+
+
+
+
+
+
+    }
+    .promotion-container{
+        padding: 5%;
+        background-color: #0000002d;
+        width: 100%;
+        // text-align: center;
+        // align-items: center;
+        // justify-content: center;
+        // display: flex;
+        // flex-direction: column;
+    }
 }
 
 
@@ -630,6 +695,25 @@ footer{
     z-index: 10000000;
 }
   
+
+
+
+.product-popup {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.873);
+    border: 1px solid #00000098;
+    padding: 10px;
+    width: 250x;
+    height: 180px;
+
+    display: none;
+    z-index: 1000; /* Ensure popup appears above other content */
+}
+
+.details-card:hover .product-popup {
+    display: block;
+}
+
 
 
 
@@ -673,6 +757,18 @@ footer{
         }
 
 
+
+}
+
+
+
+
+
+//-------------------------
+//profile-container 
+.profile-container {
+
+padding-top: 5%;
 
 }
 

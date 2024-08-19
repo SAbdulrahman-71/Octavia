@@ -1,46 +1,57 @@
 <?php
-ob_start(); // Start output buffering
+ob_start();
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Redirect to login page if user is not logged in
 if (!isset($_SESSION['loggedin'])) {
-    header('Location: ../auth/login.php');
+    header('Location: ../auth/index.php');
     exit;
 }
 
-// Include files for fetching inventory and database connection
 require('../data/fetch_inventory.php');
 include '../php/db.php';
 include('../php/header.php');
-include('../cart/cart_btn.php'); // Ensure this file does not produce output
+include('../cart/cart_btn.php');
 include('../php/footer.php');
 
+$message = "";
+
+// Function to generate a random order number
 function generateOrderNumber()
 {
     $timestamp = time();
-    $randomNumber = rand(1000, 9999); // Generate a random number between 1000 and 9999
-    return 'ORD' . $timestamp . $randomNumber; // Prefix with 'ORD' for easy identification
+    $randomNumber = rand(1000, 9999);
+    return 'ORD' . $timestamp . $randomNumber;
 }
 
 // Handle POST requests for cart operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['update_cart'])) {
-        $itemId = filter_var($_POST['item_id'], FILTER_SANITIZE_NUMBER_INT);
-        $quantity = filter_var($_POST['quantity'], FILTER_SANITIZE_NUMBER_INT);
+    $feedback = '';
 
-        if ($quantity > 0) {
-            $_SESSION['cart'][$itemId] = $quantity;
-        } else {
-            unset($_SESSION['cart'][$itemId]);
+    if (isset($_POST['update_cart'])) {
+        $quantities = $_POST['quantities'] ?? [];
+        $item_ids = $_POST['item_ids'] ?? [];
+
+        foreach ($item_ids as $index => $item_id) {
+            $itemId = filter_var($item_id, FILTER_SANITIZE_NUMBER_INT);
+            $quantity = filter_var($quantities[$item_id] ?? 0, FILTER_SANITIZE_NUMBER_INT);
+
+            if ($quantity > 0) {
+                $_SESSION['cart'][$itemId] = $quantity;
+                $feedback = '<div class="alert alert-success" role="alert">Cart updated successfully.</div>';
+            } else {
+                unset($_SESSION['cart'][$itemId]);
+                $feedback = '<div class="alert alert-warning" role="alert">Item removed from cart.</div>';
+            }
         }
     }
 
     if (isset($_POST['remove_from_cart'])) {
         $itemId = filter_var($_POST['item_id'], FILTER_SANITIZE_NUMBER_INT);
         unset($_SESSION['cart'][$itemId]);
+        $feedback = '<div class="alert alert-warning" role="alert">Item removed from cart.</div>';
     }
 
     if (isset($_POST['check_out'])) {
@@ -49,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $user_id = $_SESSION['user_id'];
+
         $order_number = generateOrderNumber();
         $total_amount = 0;
 
@@ -84,12 +96,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $connect->commit();
             unset($_SESSION['cart']);
+
+            // Ensure 'name' is set in the session before using it
+            $user_name = isset($_SESSION['name']) ? htmlspecialchars($_SESSION['name']) : 'User';
+
+            // Construct the feedback message
+            $_SESSION['feedback'] = '
+            <div class="alert alert-success" role="alert">
+                Dear ' . $user_name . ',
+                <br>
+                Your order has been submitted successfully with order number ' . htmlspecialchars($order_number) . '.
+                <br>
+                Thank you for shopping with us.
+            </div>';
+
+            // Redirect to the cart page
             header('Location: ../cart/view_cart.php');
             exit();
         } catch (Exception $e) {
             $connect->rollback();
             error_log("Failed to process the order: " . $e->getMessage());
-            echo "Failed to process the order.";
+            $_SESSION['feedback'] = '<div class="alert alert-danger" role="alert">Failed to process the order. Please try again later.</div>';
         }
     }
 
@@ -103,6 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ob_end_flush(); // End output buffering and flush output
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -115,10 +143,19 @@ ob_end_flush(); // End output buffering and flush output
 </head>
 
 <body class="container">
+
     <!-- Main content -->
     <div style="margin-top: 10%; margin-bottom:10%">
-        <div class="container">
+
+        <div class="container card">
             <h2 class="mb-4">Cart</h2>
+            <?php
+            if (isset($_SESSION['feedback'])) {
+                echo $_SESSION['feedback'];
+                unset($_SESSION['feedback']);
+            }
+
+            ?>
             <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) : ?>
                 <form method="POST" action="view_cart.php">
                     <table class="table table-bordered">
@@ -145,9 +182,9 @@ ob_end_flush(); // End output buffering and flush output
                                                 <td><?php echo htmlspecialchars($product['name']); ?></td>
                                                 <td>
                                                     <div class="input-group mb-4">
-                                                        <input type="number" class="form-control" name="quantity" value="<?php echo $quantity ?>" min="1">
+                                                        <input type="number" class="form-control" name="quantities[<?php echo $product_id; ?>]" value="<?php echo $quantity; ?>" min="1">
                                                         <div class="input-group-append">
-                                                            <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                                            <input type="hidden" name="item_ids[]" value="<?php echo htmlspecialchars($product['id']); ?>">
                                                             <button type="submit" class="btn btn-success" name="update_cart" value="1">Update</button>
                                                         </div>
                                                     </div>

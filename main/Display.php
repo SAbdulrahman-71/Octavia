@@ -43,7 +43,6 @@ $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $sortBy = isset($_GET['sort']) ? $_GET['sort'] : '';
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
-// Include necessary files
 require('../data/fetch_inventory.php');
 require('../php/header.php');
 require('../cart/cart_btn.php');
@@ -101,7 +100,6 @@ require('../php/search_sort.php');
 
         <!-- Pagination -->
         <?php
-        // Assuming you have total items count
         $totalItems = getTotalItemsCount($selectedCategory, $searchQuery);
         $limit = 20; // Number of items per page
         $totalPages = ceil($totalItems / $limit);
@@ -135,6 +133,35 @@ require('../php/search_sort.php');
             }
         }
     </script>
+
+    <script src="../js/like.js"></script>
 </body>
 
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.wish-icon').forEach(function(icon) {
+            icon.addEventListener('click', function() {
+                var productId = this.getAttribute('data-product-id');
+                var isWishlist = this.classList.contains('fa-heart');
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'wishlist_action.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        if (isWishlist) {
+                            icon.classList.remove('fa-heart');
+                            icon.classList.add('fa-heart-o');
+                        } else {
+                            icon.classList.remove('fa-heart-o');
+                            icon.classList.add('fa-heart');
+                        }
+                    }
+                };
+                xhr.send('product_id=' + productId + '&action=' + (isWishlist ? 'remove' : 'add'));
+            });
+        });
+    });
+</script>

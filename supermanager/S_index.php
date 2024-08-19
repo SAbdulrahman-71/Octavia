@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 include '../php/db.php';
-
+include('../data/fetch_inventory.php');
 include('../cart/cart_btn.php');
 include('../php/footer.php');
 
@@ -28,6 +28,19 @@ $message = isset($_GET['message']) ? htmlspecialchars($_GET['message']) : '';
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/5b71452b8d.js" crossorigin="anonymous"></script>
 
+
+
+    <style>
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .collapsible-content.expanded {
+            max-height: 100%;
+        }
+    </style>
 </head>
 
 <body class="S-index-container ">
@@ -75,7 +88,25 @@ $message = isset($_GET['message']) ? htmlspecialchars($_GET['message']) : '';
 
 
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners to all toggle buttons
+            document.querySelectorAll('.toggle-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const collapsibleContent = document.querySelector(targetId);
 
+                    if (collapsibleContent.classList.contains('expanded')) {
+                        collapsibleContent.classList.remove('expanded');
+                        button.textContent = 'View Details';
+                    } else {
+                        collapsibleContent.classList.add('expanded');
+                        button.textContent = 'Hide Details';
+                    }
+                });
+            });
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

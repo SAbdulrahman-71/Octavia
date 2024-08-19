@@ -281,3 +281,24 @@ INSERT INTO `inventory` (`category`, `brand`, `name`, `price`, `occasion`, `desc
 ('Watches', 'Citizen', 'Satellite Wave', 12999.99, 'Travel', 'A technologically advanced watch with satellite timekeeping and a sleek design.', 'citizen_satellite_wave.jpg');
 
 
+
+
+
+
+CREATE TABLE `notifications` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `message` TEXT NOT NULL,
+    `is_read` BOOLEAN DEFAULT FALSE,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE `wishlist` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `item_id` INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (item_id) REFERENCES inventory(id)
+);

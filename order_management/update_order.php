@@ -1,33 +1,45 @@
-
 <?php
-// Include database connection
 include '../php/db.php';
 
-// Start session if not already started
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if user is logged in and has a role
+
 if (!isset($_SESSION['role'])) {
-    // Redirect to login page if no role is set
     header('Location: ../auth/login.php');
     exit;
 }
 
 // Escape and validate input
 $order_number = mysqli_real_escape_string($connect, $_POST['order_number']);
-$new_order_status = mysqli_real_escape_string($connect, $_POST['new_order_status']); // Fixed typo in 'new_order_status'
+$new_order_status = mysqli_real_escape_string($connect, $_POST['new_order_status']);
 
 // Update order status in the database
-$query = "UPDATE orders SET status = '$new_order_status' WHERE order_number = '$order_number'"; // Correct WHERE clause
+$query = "UPDATE orders SET status = '$new_order_status' WHERE order_number = '$order_number'";
 if (mysqli_query($connect, $query)) {
+    // Fetch user ID associated with the order
+    $user_query = "SELECT user_id FROM orders WHERE order_number = '$order_number'";
+    $user_result = mysqli_query($connect, $user_query);
+    if ($user_result && $user_row = mysqli_fetch_assoc($user_result)) {
+        $user_id = $user_row['user_id'];
+
+        // Create notification message
+        $message = "Your order #$order_number has been updated to $new_order_status.";
+
+        // Add notification to the database
+        $stmt = $connect->prepare("INSERT INTO notifications (user_id, message) VALUES (?, ?)");
+        $stmt->bind_param("is", $user_id, $message);
+        $stmt->execute();
+    }
+
     $message = 'Order status updated successfully.';
 } else {
     $message = 'Error updating order status: ' . mysqli_error($connect);
 }
 
-// Determine the redirect location based on user role
+
 switch ($_SESSION['role']) {
     case 'super_manager':
         $redirect_url = '../supermanager/S_index.php';
@@ -39,12 +51,11 @@ switch ($_SESSION['role']) {
         $redirect_url = '../admin/A_index.php';
         break;
     default:
-        // If role is not recognized, redirect to a default page or an error page
-        $redirect_url = '../auth/login.php'; // Redirect to login or error page
+
+        $redirect_url = '../auth/login.php';
         break;
 }
 
 // Redirect back to management page with success or error message
 header('Location: ' . $redirect_url . '?message=' . urlencode($message));
 exit;
-?>

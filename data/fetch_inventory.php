@@ -1,5 +1,4 @@
 <?php
-// Adjust the path to db.php
 include('/xampp/htdocs/Octavia/php/db.php');
 
 $product_sql = "SELECT * FROM inventory";

@@ -9,7 +9,7 @@ include('../auth/auth.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login OR Register</title>
+    <title>Login | Register</title>
 
     <link rel="stylesheet" href="../scss/style.css">
     <script src="https://kit.fontawesome.com/5b71452b8d.js" crossorigin="anonymous"></script>
