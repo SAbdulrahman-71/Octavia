@@ -89,13 +89,11 @@ function displayCategoryProducts($inventory, $selectedCategory, $searchQuery, $s
             echo <<<HTML
 <div id="product-$id" class="col-md-4 col-lg-3 mb-4">
     <div class="card product-card h-100">
-        <div class="image-container">
-            <Button onclick="Toggle1()" id="btnh1" class="btn">
-<i class="fa-regular fa-heart wish-icon"></i>
-            </Button>
-            
+       <a href="product.php?product= $id; "><div class="image-container">
+          
+  
             <img src="$img" alt="$name" class="card-img-top img-fluid" loading="lazy">
-        </div>
+        </div> </a>
         <div class="card-body text-center">
             <h5 class="card-title">$name</h5>
             <p class="card-text"><strong>Price:</strong> $price AED</p>

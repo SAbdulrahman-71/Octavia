@@ -97,18 +97,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $connect->commit();
             unset($_SESSION['cart']);
 
-            // Ensure 'name' is set in the session before using it
+
             $user_name = isset($_SESSION['name']) ? htmlspecialchars($_SESSION['name']) : 'User';
 
-            // Construct the feedback message
+
             $_SESSION['feedback'] = '
             <div class="alert alert-success" role="alert">
                 Dear ' . $user_name . ',
                 <br>
-                Your order has been submitted successfully with order number ' . htmlspecialchars($order_number) . '.
+                Your order has been submitted successfully with order number <a href="../main/profile.php">' . htmlspecialchars($order_number) . '.</a>
                 <br>
                 Thank you for shopping with us.
             </div>';
+
+
+
 
             // Redirect to the cart page
             header('Location: ../cart/view_cart.php');
@@ -120,7 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Redirect back to view_cart.php if no check_out action
     if (!isset($_POST['check_out'])) {
         header('Location: ../cart/view_cart.php');
         exit();
@@ -146,9 +148,9 @@ ob_end_flush(); // End output buffering and flush output
 
     <!-- Main content -->
     <div style="margin-top: 10%; margin-bottom:10%">
-
+        <h2 class="mb-4">Cart</h2>
         <div class="container card">
-            <h2 class="mb-4">Cart</h2>
+
             <?php
             if (isset($_SESSION['feedback'])) {
                 echo $_SESSION['feedback'];
@@ -159,57 +161,58 @@ ob_end_flush(); // End output buffering and flush output
             <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) : ?>
                 <form method="POST" action="view_cart.php">
                     <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $total = 0;
-                            foreach ($_SESSION['cart'] as $product_id => $quantity) :
-                                foreach ($inventory as $category => $products) {
-                                    foreach ($products as $product) {
-                                        if ($product['id'] == $product_id) {
-                                            $product_total = $product['price'] * $quantity;
-                                            $total += $product_total;
-                            ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($product['name']); ?></td>
-                                                <td>
-                                                    <div class="input-group mb-4">
-                                                        <input type="number" class="form-control" name="quantities[<?php echo $product_id; ?>]" value="<?php echo $quantity; ?>" min="1">
-                                                        <div class="input-group-append">
-                                                            <input type="hidden" name="item_ids[]" value="<?php echo htmlspecialchars($product['id']); ?>">
-                                                            <button type="submit" class="btn btn-success" name="update_cart" value="1">Update</button>
+                        <?php
+                        $total = 0;
+                        foreach ($_SESSION['cart'] as $product_id => $quantity) :
+                            foreach ($inventory as $category => $products) {
+                                foreach ($products as $product) {
+                                    if ($product['id'] == $product_id) {
+                                        $product_total = $product['price'] * $quantity;
+                                        $total += $product_total;
+                        ?>
+                                        <div class="card mb-3">
+                                            <div class="row no-gutters">
+
+                                                <div class="col-md-4" style="width: 100px;">
+                                                    <img src="<?php echo htmlspecialchars($product['img']); ?>" class="card-img" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                                </div>
+
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
+                                                        <p class="card-text"><small class="text-muted"><?php echo htmlspecialchars($product['description']); ?></small></p>
+
+
+                                                        <div class="input-group mb-3" style="max-width: 150px;">
+                                                            <input type="number" class="form-control" name="quantities[<?php echo $product_id; ?>]" value="<?php echo $quantity; ?>" min="1">
+                                                            <div class="input-group-append">
+                                                                <input type="hidden" name="item_ids[]" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                                                <button type="submit" class="btn btn-success" name="update_cart" value="1">Update</button>
+                                                            </div>
                                                         </div>
+
+                                                        <?php echo number_format($product_total, 2); ?> AED
+
+                                                        <form method="POST" action="view_cart.php">
+                                                            <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                                            <button type="submit" class="btn btn-danger" name="remove_from_cart" value="1">Remove</button>
+                                                        </form>
                                                     </div>
-                                                </td>
-                                                <td><?php echo number_format($product['price'], 2); ?> AED</td>
-                                                <td><?php echo number_format($product_total, 2); ?> AED</td>
-                                                <td>
-                                                    <form method="POST" action="view_cart.php">
-                                                        <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($product['id']); ?>">
-                                                        <button type="submit" class="btn btn-danger" name="remove_from_cart" value="1">Remove</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                            <?php
-                                        }
+                                                </div>
+                                            </div>
+                                        </div>
+                        <?php
                                     }
                                 }
-                            endforeach;
-                            ?>
-                            <tr>
-                                <td colspan="3" class="text-right"><strong>Total</strong></td>
-                                <td><?php echo number_format($total, 2); ?> AED</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
+                            }
+                        endforeach;
+                        ?>
+                        <div>
+                            <td colspan="3" class="text-right"><strong>Total</strong></td>
+                            <td><?php echo number_format($total, 2); ?> AED</td>
+
+                        </div>
+
                     </table>
                     <button type="submit" name="check_out" class="btn btn-primary ml-5">Check out</button>
                 </form>

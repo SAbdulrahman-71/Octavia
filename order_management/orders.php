@@ -1,5 +1,5 @@
 <?php
-include('../data/fetch_inventory.php'); // This should fetch the $inventory
+include('../data/fetch_inventory.php');
 
 // Fetch orders
 $query = "SELECT * FROM orders";

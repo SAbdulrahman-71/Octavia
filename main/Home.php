@@ -10,7 +10,7 @@ if (!isset($_SESSION['loggedin'])) {
 
 require('../data/fetch_inventory.php');
 
-$get_prid = isset($_GET['product']) ? $_GET['product'] : null;
+$get_prid = isset($_GET['product']) ? $_GET['product'] : null; //get product id
 $info = null;
 
 if ($get_prid !== null) {
@@ -63,6 +63,7 @@ $P_query = "
         i.name, 
         i.description,
         i.img,
+        i.category,
         p.promotion_type
     FROM 
         inventory i
@@ -95,6 +96,9 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | Artisté</title>
     <link rel="stylesheet" href="./scss/style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body class="home" style="background-color: #e2e2e2;">
@@ -122,7 +126,7 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
                             <p class="card-text"><?php echo htmlspecialchars($product['description']); ?></p>
                         </div>
                         <div class="card-footer text-center">
-                            <a href="display.php?product=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-primary">View Details</a>
+                            <a href="product.php?product=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-primary">Check it out</a>
                         </div>
                     </div>
                 </div>
@@ -156,16 +160,21 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
         <h2>On Promotion</h2>
         <div class="row">
             <?php foreach ($Promo_Products as $product): ?>
+
+
+
+
                 <div class="col-md-2 mb-4">
                     <div class="card product-card h-100">
 
                         <img src="<?php echo htmlspecialchars($product['img']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="card-img-top img-fluid" loading="lazy">
                         <div class="card-body text-center">
                             <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
+                            <h5 class="card-title"><?php echo htmlspecialchars($product['category']); ?></h5>
 
                         </div>
                         <div class="card-footer text-center">
-                            <a href="display.php?product=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-primary">View Details</a>
+                            <a href="display.php?category=<?php echo htmlspecialchars($product['category']); ?>" class="btn btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>

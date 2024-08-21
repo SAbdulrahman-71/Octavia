@@ -44,7 +44,7 @@ $activeTab = isset($_GET['tab']) ? htmlspecialchars($_GET['tab']) : 'users';
     </style>
 </head>
 
-<body class="S-index-container ">
+<body class="S-index-container">
     <?php include('../php/header.php'); ?>
     <div class="container-fluid p-5">
         <?php if ($message) : ?>
@@ -59,11 +59,12 @@ $activeTab = isset($_GET['tab']) ? htmlspecialchars($_GET['tab']) : 'users';
                 <li class="nav-item">
                     <a class="nav-link <?php echo $activeTab === 'users' ? 'active' : ''; ?>" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="<?php echo $activeTab === 'users' ? 'true' : 'false'; ?>">Manage Users</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link <?php echo $activeTab === 'inventory' ? 'active' : ''; ?>" id="inventory-tab" data-toggle="tab" href="#inventory" role="tab" aria-controls="inventory" aria-selected="<?php echo $activeTab === 'inventory' ? 'true' : 'false'; ?>">Manage Inventory</a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link <?php echo $activeTab === 'profile' ? 'active' : ''; ?>" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="<?php echo $activeTab === 'profile' ? 'true' : 'false'; ?>">Manage Profile</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link <?php echo $activeTab === 'orders' ? 'active' : ''; ?>" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="<?php echo $activeTab === 'orders' ? 'true' : 'false'; ?>">Manage Orders</a>
                 </li>
@@ -77,41 +78,26 @@ $activeTab = isset($_GET['tab']) ? htmlspecialchars($_GET['tab']) : 'users';
                 <?php include '../user_management/users.php'; ?>
             </div>
 
-
-            <!-- Orders Tab -->
-            <div class="tab-pane fade <?php echo $activeTab === 'orders' ? 'show active' : ''; ?>" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                <?php include '../order_management/orders.php'; ?>
-            </div>
-
-
             <!-- Inventory Tab -->
             <div class="tab-pane fade <?php echo $activeTab === 'inventory' ? 'show active' : ''; ?>" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
                 <?php include '../inventory_management/inventory.php'; ?>
             </div>
 
+            <!-- Profile Tab -->
+            <div class="tab-pane fade <?php echo $activeTab === 'profile' ? 'show active' : ''; ?>" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <?php include '../main/profile.php'; ?>
+            </div>
 
+            <!-- Orders Tab -->
+            <div class="tab-pane fade <?php echo $activeTab === 'orders' ? 'show active' : ''; ?>" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                <?php include '../order_management/orders.php'; ?>
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Add event listeners to all toggle buttons
-            document.querySelectorAll('.toggle-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetId = button.getAttribute('data-target');
-                    const collapsibleContent = document.querySelector(targetId);
-
-                    if (collapsibleContent.classList.contains('expanded')) {
-                        collapsibleContent.classList.remove('expanded');
-                        button.textContent = 'View Details';
-                    } else {
-                        collapsibleContent.classList.add('expanded');
-                        button.textContent = 'Hide Details';
-                    }
-                });
-            });
-
-            // Automatically set the active tab from URL hash
+            // Automatically set the active tab from URL parameters
             const hash = window.location.hash.substring(1);
             if (hash) {
                 const tab = document.querySelector(`a[href="#${hash}"]`);

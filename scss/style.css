@@ -585,16 +585,8 @@ footer {
   display: flex;
   flex-direction: row;
 }
-.S-index-container .tab-content {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-top: 10px;
-}
-.S-index-container .btn-container {
-  margin-bottom: 20px;
-}
 
 .profile-container {
   padding-top: 5%;
+  font-family: "Times New Roman", Times, serif !important;
 }/*# sourceMappingURL=style.css.map */
