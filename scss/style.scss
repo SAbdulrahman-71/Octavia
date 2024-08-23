@@ -765,4 +765,89 @@ font-family: 'Times New Roman', Times, serif !important;
 }
 
 
+.product-container{
+padding: 5%;
+padding-top: 2%;
+
+.breadcrumb {
+    background-color: #f3ebebcc;
+    height: 2rem;
+    font-size: 1rem;
+    padding: 0;
+    a{
+        color: $Coral_Red;
+    }
+}
+.product-card {
+    background-color: #fcfcfc96;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    max-height: 100vh;
+}
+
+.product-image {
+    border-radius: 15px;
+    max-height: 500px;
+    object-fit: cover;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.product-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 0px 0px 0px darken($color: #000000, $amount: 30);
+}
+.product-ocassion {
+    padding: 0;
+    margin: 0;
+    color: #201f1fd3;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 15px;
+    
+}
+.product-price {
+    color: #e74c3c;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.product-description {
+    margin-bottom: 30px;
+    font-size: 1.3rem;
+    line-height: 1.6;
+}
+.product-long_description {
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+.btn-add-to-cart {
+    background-color: $Coral_Red;
+    color: #fff;
+    border: none;
+   
+    transition: background-color 0.3s ease;
+}
+
+.btn-add-to-cart:hover {
+    background-color: darken($color: $Coral_Red, $amount: 20);
+}
+
+.input-group input {
+    border-radius: 5px 0 0 5px;
+}
+
+.input-group-append .btn {
+    border-radius: 0 5px 5px 0;
+}
+
+
+
+}
 

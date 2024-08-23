@@ -101,7 +101,7 @@ $Promo_Products = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
-<body class="home" style="background-color: #e2e2e2;">
+<body class="home">
 
     <div class="hero">
 

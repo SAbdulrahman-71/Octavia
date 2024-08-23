@@ -6,7 +6,6 @@ require('../data/fetch_inventory.php');
 ?>
 
 <link rel="stylesheet" href="../scss/style.css">
-<!-- Modal HTML goes here (ensuring no PHP output before this) -->
 <div class="modal fade py-5" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true" style="margin: 0">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">

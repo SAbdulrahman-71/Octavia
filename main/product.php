@@ -1,13 +1,33 @@
 <?php
 session_start();
-require('../php/header.php'); // Include header
-require('../php/footer.php'); // Include footer
-require('../data/fetch_inventory.php'); // Fetch inventory data
+ob_start(); // Start output buffering
 
-// Check if a product ID is provided
-if (!isset($_GET['product'])) {
-    header('Location: index.php?error=Product not found');
-    exit;
+require('../php/header.php');
+require('../php/footer.php');
+require('../data/fetch_inventory.php');
+require('../cart/cart_btn.php');
+
+// Handle adding product to the cart
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['product_id'])) {
+        $product_id = intval($_POST['product_id']);
+        $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
+
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+        // Add or update the item in the cart
+        $_SESSION['cart'][$product_id] = isset($_SESSION['cart'][$product_id])
+            ? $_SESSION['cart'][$product_id] + $quantity
+            : $quantity;
+
+        //Go back to product page with it's id
+        header('Location: ../main/product.php?product=' . $product_id);
+
+        ob_end_flush(); // End buffering and flush output
+        exit();
+    }
 }
 
 // Fetch the product ID and validate it
@@ -23,11 +43,6 @@ foreach ($inventory as $category => $products) {
         }
     }
 }
-
-if ($product === null) {
-    header('Location: index.php?error=Product not found');
-    exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -39,86 +54,17 @@ if ($product === null) {
     <title>Product Details | Artisté</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/scss/style.css">
-    <style>
-        body {
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .breadcrumb {
-            background-color: transparent;
-            padding: 0;
-        }
-
-        .product-card {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .product-image {
-            border-radius: 15px;
-            max-height: 500px;
-            object-fit: cover;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .product-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .product-price {
-            color: #e74c3c;
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .product-description {
-            margin-bottom: 30px;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .btn-add-to-cart {
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-add-to-cart:hover {
-            background-color: #2980b9;
-        }
-
-        .input-group input {
-            border-radius: 5px 0 0 5px;
-        }
-
-        .input-group-append .btn {
-            border-radius: 0 5px 5px 0;
-        }
-    </style>
 </head>
 
 <body>
 
     <?php include('../php/header.php'); ?>
 
-    <div class="container my-5">
+    <div class="product-container my-5">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                <li class="breadcrumb-item"><a href="category.php?category=<?php echo urlencode($product['category']); ?>"><?php echo htmlspecialchars($product['category']); ?></a></li>
+                <li class="breadcrumb-item"><a href="../main/Home.php">Home</a></li>
+                <li class="breadcrumb-item"><a href="../main/Display.php?category=<?php echo urlencode($product['category']); ?>"><?php echo htmlspecialchars($product['category']); ?></a></li>
                 <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($product['name']); ?></li>
             </ol>
         </nav>
@@ -129,10 +75,17 @@ if ($product === null) {
             </div>
             <div class="col-md-6">
                 <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
-                <p class="product-price"><?php echo number_format($product['price'], 2); ?> AED</p>
-                <p class="product-description"><?php echo htmlspecialchars($product['description']); ?></p>
+                <strong>
+                    <h5 class="product-ocassion"><?php echo htmlspecialchars($product['occasion']); ?></h5>
+                </strong>
+                <strong>
+                    <p class="product-description"><?php echo htmlspecialchars($product['description']); ?></p>
+                </strong>
 
-                <form action="../cart/cart_btn.php" method="post">
+                <p class="product-long_description"><?php echo htmlspecialchars($product['long_description']); ?></p>
+
+                <p class="product-price"><?php echo number_format($product['price'], 2); ?> AED</p>
+                <form action="product.php" method="post">
                     <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
                     <div class="input-group mb-3">
                         <input type="number" class="form-control" name="quantity" value="1" min="1" aria-label="Quantity">

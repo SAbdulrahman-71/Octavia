@@ -149,7 +149,7 @@ ob_end_flush(); // End output buffering and flush output
     <!-- Main content -->
     <div style="margin-top: 10%; margin-bottom:10%">
         <h2 class="mb-4">Cart</h2>
-        <div class="container card">
+        <div class="container card" style="width: 75dvw; ">
 
             <?php
             if (isset($_SESSION['feedback'])) {

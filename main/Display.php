@@ -139,7 +139,7 @@ require('../php/search_sort.php');
 
 </html>
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.wish-icon').forEach(function(icon) {
             icon.addEventListener('click', function() {
@@ -164,4 +164,4 @@ require('../php/search_sort.php');
             });
         });
     });
-</script>
+</script> -->

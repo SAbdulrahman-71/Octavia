@@ -1,6 +1,5 @@
 <?php
 include('../auth/auth.php');
-// include('../auth/verify.php');
 ?>
 <!DOCTYPE html>
 
@@ -29,11 +28,13 @@ include('../auth/auth.php');
     <!-- Display the message only if it's not empty -->
     <?php if (!empty($message)) : ?>
         <div class="alert <?php echo strpos($message, 'Error') === false ? 'alert-danger' : 'alert-success'; ?>">
+            <!-- Using ENT_QUOTES 'UTF-8' to make sure to that any special char are scaped and display clean -->
             <?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
     <div class="container" id=container>
+        <!-- Register -->
         <div class="form-container sign-up">
             <form action="index.php" method="post">
                 <h1>Creat Account</h1>
@@ -49,11 +50,14 @@ include('../auth/auth.php');
                 <input type="email" placeholder="Email" class="form-control" name="email" id="email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
                 <input type="password" placeholder="Password" class="form-control" name="password" id="password" required>
                 <input type="password" placeholder="Confirm Password" class="form-control" name="password_2" id="password_2" required>
+
+                <!-- If value of action is register go to auth.php -->
                 <button type="submit" name="action" value="register">Sign Up</button>
             </form>
         </div>
 
         <div class="form-container Log-in">
+            <!-- Log in -->
             <form action="index.php" method="post">
                 <h1>Log In</h1>
                 <div class="social-icons">
@@ -65,6 +69,8 @@ include('../auth/auth.php');
                 <span>or use your email & password for Log in</span>
                 <input type="email" placeholder="Email" class="form-control" name="email" required>
                 <input type="password" placeholder="Password" class="form-control" name="password" required>
+
+                <!-- If value of action is login go to auth.php -->
                 <button type="submit" name="action" value="login">Login</button>
                 <a href="index.php">Forgot Password</a>
 
